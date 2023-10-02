@@ -1,0 +1,2 @@
+D:\1\Microsoft Visual Studio\source\CLH-C\x64\Debug\CLH-C.exe
+D:\Git\repository\Cyber-LightHouse\CLH-C\x64\Debug\CLH-C.exe
