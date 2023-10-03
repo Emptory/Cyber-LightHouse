@@ -388,11 +388,17 @@ int main()
 
 		int type = SOCK_STREAM;
 		int typeLen = sizeof(type);
-		getsockopt(client_sock, SOL_SOCKET, SO_TYPE, (char *)&type, &typeLen);
-		if (type != SOCK_STREAM) {  // 非TCP连接
-			cout << "Invalid connection type" << endl;
-			error_die("非法连接");
+		if (getsockopt(client_sock, SOL_SOCKET, SO_TYPE, (char*)&type, &typeLen))
+		{
+		    if ((int)type != SOCK_STREAM) 
+			{  // 非TCP连接
+				error_die("非法连接");
+			}
+		}else
+		{
+			error_die("getsocket");
 		}
+
 		//使用client_sock对用户进行访问
 		//这样只能同时服务一个客户端
 		//创建新的线程，多线程并发
