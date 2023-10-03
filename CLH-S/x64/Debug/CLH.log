@@ -1,17 +1,18 @@
 ﻿D:\1\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(CLH.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
   CLH.cpp
 D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(76,9): warning C4244: “return”: 从“SOCKET”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(133,27): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(136,27): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(139,27): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(142,27): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(151,11): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(156,28): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(191,26): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(206,15): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(234,68): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(235,13): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(243,15): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(264,39): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(295,39): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(128,9): warning C4244: “return”: 从“SOCKET”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(184,27): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(187,27): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(190,27): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(193,27): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(202,11): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(207,28): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(242,26): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(257,15): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(285,68): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(286,13): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(294,15): warning C4244: “参数”: 从“SOCKET”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(314,39): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\CLH-S\CLH.cpp(347,41): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
   CLH.vcxproj -> D:\Git\repository\Cyber-LightHouse\CLH-S\x64\Debug\CLH-S.exe
