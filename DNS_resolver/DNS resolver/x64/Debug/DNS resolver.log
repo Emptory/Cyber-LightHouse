@@ -1,0 +1,4 @@
+﻿  resolver.cpp
+D:\Git\repository\Cyber-LightHouse\DNS_resolver\DNS resolver\resolver.cpp(45,47): warning C4244: “+=”: 从“double”转换到“unsigned short”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\DNS_resolver\DNS resolver\resolver.cpp(89,39): warning C4244: “参数”: 从“double”转换到“const unsigned __int64”，可能丢失数据
+  DNS resolver.vcxproj -> D:\Git\repository\Cyber-LightHouse\DNS_resolver\DNS resolver\x64\Debug\DNS resolver.exe
