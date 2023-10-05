@@ -34,8 +34,8 @@ void DNS_header(DNSHeader * header)
 {
     srand(time(NULL));
     header->ID = htons(rand());
-    header->flags = htons(0x0100);;
-    header->questions = htons(1);;
+    header->flags = htons(0x0100);
+    header->questions = htons(0x0001);
     header->answerRRs = htons(0);
     header->authorityRRs = htons(0);
     header->additionalRRs = htons(0);
@@ -80,14 +80,17 @@ void dtoq(const char* domain)
 void DNS_query(const char * domain, DNSQuestion* query)
 {
     dtoq(domain);
-    query->qtype = htons(1);
-    query->qclass = htons(1);
+    query->qtype = htons(0x0001);
+    query->qclass = htons(0x0001);
 }
 
 int main()
 {
     DNS_header(&header);
     DNS_query("www.baidu.com.", &query);
-    cout << hex << header.ID << ' ' << header.flags << ' ' << header.questions << ' ' << header.answerRRs << ' ' << header.authorityRRs << ' ' << header.additionalRRs<<' ';
-    for (int i = 0; i < query.length; i++) cout << hex << setw(2) << setfill('0') << (unsigned short)query.qname[i]<<' ';
+    cout << hex << header.ID << ' ' << "0100 0001 0000 0000 0000 ";
+        // header.flags << ' ' << header.questions << ' ' << header.answerRRs << ' ' << header.authorityRRs << ' ' << header.additionalRRs<<' ';
+    for (int i = 0; i < query.length; i++) cout << hex << setw(2) << setfill('0') << (unsigned short)query.qname[i] << ' ';
+    cout << "0001 0001";
+    //cout<<"00 "<< query.qtype << ' ' << query.qclass;
 }
