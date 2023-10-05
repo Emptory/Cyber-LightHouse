@@ -18,28 +18,28 @@ void error_die(const char* str)
 
 
 int startTCP(unsigned short* port)
-{   
-	WSADATA data; 
-	int  ret = WSAStartup(MAKEWORD(2, 2), &data); 
+{
+	WSADATA data;
+	int  ret = WSAStartup(MAKEWORD(2, 2), &data);
 	if (ret)
 	{
 		error_die("WSAStartup");
 	}
-	
+
 	SOCKET server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (server_socket == -1)
 	{
 		error_die("套接字");
 	}
 
-	
+
 	int opt = 1;
 	setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&opt, sizeof(opt));
 	if (ret == -1)
 	{
 		error_die("setsockopt");
 	}
-	
+
 	struct sockaddr_in server_addr;
 	memset(&server_addr, 0, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
@@ -73,9 +73,9 @@ int startTCP(unsigned short* port)
 
 
 int startUDP(unsigned short* port)
-{    
-	WSADATA data;        
-	int  ret = WSAStartup(MAKEWORD(2, 2), &data);  
+{
+	WSADATA data;
+	int  ret = WSAStartup(MAKEWORD(2, 2), &data);
 	if (ret)
 	{
 		error_die("WSAStartup");
@@ -301,7 +301,7 @@ DWORD WINAPI accept_TCP(LPVOID arg)
 	SOCKET client = (SOCKET)arg;
 	int TCPread, TCPsend;
 	while (1)
-	{ 
+	{
 		TCPread = recv(client, buff, 4096, 0);
 		if (TCPread > 0)
 		{
@@ -311,7 +311,7 @@ DWORD WINAPI accept_TCP(LPVOID arg)
 			{
 				memset(&buff, 0, sizeof(buff));
 			}
-			else 
+			else
 			{
 				error_die("TCPsend");
 			}
@@ -329,16 +329,16 @@ DWORD WINAPI accept_UDP(LPVOID arg)
 {
 	char buff[255];
 	memset(&buff, 0, sizeof(buff));
-	SOCKET server= (SOCKET)arg;
+	SOCKET server = (SOCKET)arg;
 	struct sockaddr_in client_addr;
 	int len_client = sizeof(client_addr);
 	int UDPread, UDPsend;
 	while (1)
 	{
-		UDPread = recvfrom(server, buff, 255, 0,(struct sockaddr *)&client_addr,&len_client);
+		UDPread = recvfrom(server, buff, 255, 0, (struct sockaddr*)&client_addr, &len_client);
 		if (UDPread > 0)
 		{
-			cout << "接受到一个连接：%s \r\n" << inet_ntoa(client_addr.sin_addr)<<endl << buff << endl;
+			cout << "接受到一个连接：%s \r\n" << inet_ntoa(client_addr.sin_addr) << endl << buff << endl;
 			UDPsend = sendto(server, buff, strlen(buff), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
 
 			if (UDPsend > 0)
@@ -368,15 +368,15 @@ int main()
 	unsigned short port = 8000;
 	cout << "监听端口：";
 	cin >> port;
-	cout << "正在监听：" << port<<endl;
-	SOCKET server_sock = startTCP(&port);
+	cout << "正在监听：" << port << endl;
+	SOCKET server_sock = startUDP(&port);
 	struct sockaddr_in client_addr;
 	int client_addr_len = sizeof(client_addr);
 
 	while (1)
 	{
 		//阻塞式等待用户通过浏览器发起访问
-		SOCKET client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_len);
+	/*	SOCKET client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_len);
 		if (client_sock == -1)
 		{
 			error_die("accept");
@@ -385,19 +385,7 @@ int main()
 		{
 			cout << "accepted" << endl;
 		}
-
-		int type = SOCK_STREAM;
-		int typeLen = sizeof(type);
-		if (getsockopt(client_sock, SOL_SOCKET, SO_TYPE, (char*)&type, &typeLen))
-		{
-		    if ((int)type != SOCK_STREAM) 
-			{  // 非TCP连接
-				error_die("非法连接");
-			}
-		}else
-		{
-			error_die("getsocket");
-		}
+		*/
 
 		//使用client_sock对用户进行访问
 		//这样只能同时服务一个客户端
@@ -406,10 +394,10 @@ int main()
 
 		//windows
 		DWORD threadID = 0;
-		CreateThread(0, 0, accept_TCP, (void*)client_sock, 0, &threadID);
-     	//CreateThread(0, 0, accept_UDP, (void*)server_sock, 0, &threadID);
+		//CreateThread(0, 0, accept_TCP, (void*)client_sock, 0, &threadID);
+		CreateThread(0, 0, accept_UDP, (void*)server_sock, 0, &threadID);
 	}
-    
+
 
 	WSACleanup();
 	closesocket(server_sock);

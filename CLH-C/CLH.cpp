@@ -18,14 +18,14 @@ void error_die(const char* str)
 
 
 int startTCP(unsigned short* port)
-{   
+{
 	WSADATA data;
-	int  ret = WSAStartup(MAKEWORD(2, 2), &data); 
+	int  ret = WSAStartup(MAKEWORD(2, 2), &data);
 	if (ret)
 	{
 		error_die("WSAStartup");
 	}
-	
+
 	SOCKET client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (client_socket == -1)
 	{
@@ -42,19 +42,19 @@ int startTCP(unsigned short* port)
 	{
 		error_die("connect");
 	}
-	
+
 	return client_socket;
 }
 
 int startUDP(unsigned short* port)
-{    
+{
 	WSADATA data;
-	int  ret = WSAStartup(MAKEWORD(2, 2), &data); 
+	int  ret = WSAStartup(MAKEWORD(2, 2), &data);
 	if (ret)
 	{
 		error_die("WSAStartup");
 	}
-	
+
 	SOCKET client_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (client_socket == -1)
 	{
@@ -70,7 +70,7 @@ int main()
 	int conn = 0;
 	cout << "发送端口：";
 	cin >> port;
-	cout << "连接方式：1.TCP  2.UDP"<<endl;
+	cout << "连接方式：1.TCP  2.UDP" << endl;
 	cin >> conn;
 	if (conn == 1)
 	{
@@ -105,10 +105,10 @@ int main()
 				}
 			}
 		}
-		
+
 	}
 	else {
-		if (conn ==2)
+		if (conn == 2)
 		{
 			while (1)
 			{
@@ -152,15 +152,16 @@ int main()
 						error_die("recv");
 					}
 				}
-            
+
 			}
-		}else
-        {
+		}
+		else
+		{
 			cout << "不支持此种类型";
 			error_die("connect method");
 		}
 
 	}
-	
+
 	return 0;
 }
