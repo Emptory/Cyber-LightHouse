@@ -7,7 +7,7 @@
 #include<cstdio>
 #include<cstdlib>
 #include<cstring>
-
+#include <iomanip>
 #pragma comment(lib, "ws2_32.lib")
 using namespace std;
 
@@ -16,80 +16,78 @@ struct DNSHeader
     unsigned short ID;
     unsigned short flags;
     unsigned short questions;
-    unsigned short answers;
+    unsigned short answerRRs;
     unsigned short authorityRRs;
     unsigned short additionalRRs;
-};
+}header;
 
 struct DNSQuestion
 {
     char* qname;
     unsigned short qtype;
     unsigned short qclass;
-};
+    int length;
+    int label;
+}query;
 
 void DNS_header(DNSHeader * header)
 {
     srand(time(NULL));
     header->ID = htons(rand());
-    header->flags = htons(0x0100);
-    header->questions = htons(1);
-    header->answers =htons(0);
-    header->authorityRRs = 0x0000;
-    header->additionalRRs = 0x0000;
+    header->flags = htons(0x0100);;
+    header->questions = htons(1);;
+    header->answerRRs = htons(0);
+    header->authorityRRs = htons(0);
+    header->additionalRRs = htons(0);
 }
-void dtoq(const char* domain, char *qname)
+void dtoq(const char* domain)
 {
-    int index = 1;
+    int index = 0;
     int label =0;
+    int L = 0;
     int flag = 1;
-    qname = new char [strlen(domain) + 2];
-    for (int i = 0; i < strlen(domain); i++)
+    query.length= strlen(domain);
+    query.qname = new char [strlen(domain) + 1];
+    for (int i = 0; i <query.length; i++)
     {
         if (domain[i] == '.')
         {
             if (flag)
             {
-                qname[index - label - 1] = (char)label;
+                query.qname[index - label] = label;
                 label = 0;
+                index++;
+                query.label++;
                 flag = 0;
             }
             else
-            {
-                qname[index - label] = (char)label;
+            {index++;
+                query.qname[index - label-1] = label;
                 label = 0;
+                
+                query.label++;
             }
         }
-        else
+        else 
         {
-            qname[index] =domain[i];
             index++;
+            query.qname[index] =domain[i];
             label++;
         }
     }
 
-    qname[index - label] = (char)label; 
 }
 void DNS_query(const char * domain, DNSQuestion* query)
 {
-    dtoq(domain, query->qname);
+    dtoq(domain);
     query->qtype = htons(1);
     query->qclass = htons(1);
 }
 
-
-
 int main()
 {
-    DNSHeader header;
-    DNSQuestion query;
     DNS_header(&header);
-    DNS_query("www.baidu.com", &query);
-    cout << hex << header.ID << endl;
-    cout << hex << ((header.flags & 0xf0) >> 4) << (header.flags & 0x0f)<< endl;
-    cout << hex << ((header.questions & 0xf0) >> 4) << (header.questions & 0x0f) << endl;
-    cout << hex << ((header.answers & 0xf0) >> 4) << (header.answers & 0x0f) <<  endl;
-    cout << hex << ((header.authorityRRs & 0xf0) >> 4) << (header.authorityRRs & 0x0f)<< endl;
-    cout << hex << ((header.additionalRRs & 0xf0) >> 4) << (header.additionalRRs & 0x0f) << endl;
-    
+    DNS_query("www.baidu.com.", &query);
+    cout << hex << header.ID << ' ' << header.flags << ' ' << header.questions << ' ' << header.answerRRs << ' ' << header.authorityRRs << ' ' << header.additionalRRs<<' ';
+    for (int i = 0; i < query.length; i++) cout << hex << setw(2) << setfill('0') << (unsigned short)query.qname[i]<<' ';
 }
