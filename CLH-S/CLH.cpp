@@ -338,7 +338,7 @@ DWORD WINAPI accept_UDP(LPVOID arg)
 		UDPread = recvfrom(server, buff, 255, 0, (struct sockaddr*)&client_addr, &len_client);
 		if (UDPread > 0)
 		{
-			cout << "接受到一个连接：%s \r\n" << inet_ntoa(client_addr.sin_addr) << endl << buff << endl;
+			cout << buff << endl;
 			UDPsend = sendto(server, buff, strlen(buff), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
 
 			if (UDPsend > 0)
@@ -375,8 +375,7 @@ int main()
 
 	while (1)
 	{
-		//阻塞式等待用户通过浏览器发起访问
-	/*	SOCKET client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_len);
+		SOCKET client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_len);
 		if (client_sock == -1)
 		{
 			error_die("accept");
@@ -385,16 +384,9 @@ int main()
 		{
 			cout << "accepted" << endl;
 		}
-		*/
-
-		//使用client_sock对用户进行访问
-		//这样只能同时服务一个客户端
-		//创建新的线程，多线程并发
-		//进程和线程
-
-		//windows
+		
 		DWORD threadID = 0;
-		//CreateThread(0, 0, accept_TCP, (void*)client_sock, 0, &threadID);
+		CreateThread(0, 0, accept_TCP, (void*)client_sock, 0, &threadID);
 		CreateThread(0, 0, accept_UDP, (void*)server_sock, 0, &threadID);
 	}
 

@@ -1,5 +1,5 @@
 ﻿D:\1\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(Project5.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
   DNS_generater.cpp
-D:\Git\repository\Cyber-LightHouse\DNS_generater\DNS_generater.cpp(35,15): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\DNS_generater\DNS_generater.cpp(49,25): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\DNS_generater\DNS_generater.cpp(37,15): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\DNS_generater\DNS_generater.cpp(51,32): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
   Project5.vcxproj -> D:\Git\repository\Cyber-LightHouse\DNS_generater\x64\Debug\DNS_generater.exe
