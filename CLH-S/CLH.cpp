@@ -375,18 +375,18 @@ int main()
 
 	while (1)
 	{
-		SOCKET client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_len);
-		if (client_sock == -1)
-		{
-			error_die("accept");
-		}
-		else
-		{
-			cout << "accepted" << endl;
-		}
+		//SOCKET client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_len);
+		//if (client_sock == -1)
+		//{
+		//	error_die("accept");
+		//}
+		//else
+		//{
+		//	cout << "accepted" << endl;
+		//}
 		
 		DWORD threadID = 0;
-		CreateThread(0, 0, accept_TCP, (void*)client_sock, 0, &threadID);
+		//CreateThread(0, 0, accept_TCP, (void*)client_sock, 0, &threadID);
 		CreateThread(0, 0, accept_UDP, (void*)server_sock, 0, &threadID);
 	}
 

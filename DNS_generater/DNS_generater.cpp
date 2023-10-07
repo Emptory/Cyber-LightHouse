@@ -103,9 +103,13 @@ string dtoh(long long num)
 
 void print(string message)
 {
-    if (message == "1" || message == "0")
+    if (message == "1" )
     {
         cout << "00 01 ";
+        return;
+    }
+    if (message == "0") {
+        cout << "00 00 ";
         return;
     }
     if (message.length ()< 4)
@@ -131,6 +135,7 @@ int main()
     
     
     for (int i = 0; i < query.length; i++) cout << hex << setw(2) << setfill('0') << (unsigned short)query.qname[i] << ' ';
+    cout << "00 ";
     print(dtoh(stoi(to_string(query.qtype))));
     print(dtoh(stoi(to_string(query.qclass))));
     return 0;

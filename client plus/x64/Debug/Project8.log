@@ -1,3 +1,4 @@
 ﻿  client plus.cpp
-D:\1\Microsoft Visual Studio\source\Project8\client plus.cpp(154,34): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-  Project8.vcxproj -> D:\1\Microsoft Visual Studio\source\Project8\x64\Debug\client plus.exe
+D:\Git\repository\Cyber-LightHouse\client plus\client plus.cpp(103,34): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\client plus\client plus.cpp(261,62): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  Project8.vcxproj -> D:\Git\repository\Cyber-LightHouse\client plus\x64\Debug\client plus.exe

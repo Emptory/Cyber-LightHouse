@@ -13,11 +13,11 @@
 #pragma comment(lib, "ws2_32.lib")
 
 using namespace std;
-
+int flag = 0;
 void error_die(const char* str)
 {
     perror(str);
-    exit(1);
+    exit(0);
 }
 
 SOCKET startTCP(unsigned short* port)
@@ -64,60 +64,9 @@ SOCKET startUDP(unsigned short* port,string ip)
         error_die("套接字");
     }
 
-    struct sockaddr_in server_addr;
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(*port);
-    server_addr.sin_addr.s_addr = inet_addr(ip.c_str());
-
-    if (connect(client_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
-    {
-        error_die("connect");
-    }
-
     return client_socket;
 }
 
-void sendData(SOCKET client_sock)
-{
-    char buffsend[4096];
-    memset(buffsend, 0, sizeof(buffsend));
-
-    while (1)
-    {
-        cout << "input:" << endl;
-        cin >> buffsend;
-
-        if (send(client_sock, buffsend, sizeof(buffsend), 0))
-        {
-            cout << "客户端输入：" << buffsend << endl;
-            memset(buffsend, 0, sizeof(buffsend));
-        }
-        else
-        {
-            error_die("send");
-        }
-    }
-}
-
-void receiveData(SOCKET client_sock)
-{
-    char buffrecv[4096];
-    memset(buffrecv, 0, sizeof(buffrecv));
-
-    while (1)
-    {
-        if (recv(client_sock, buffrecv, sizeof(buffrecv), 0))
-        {
-            cout << "服务端返回：" << buffrecv << endl;
-            memset(buffrecv, 0, sizeof(buffrecv));
-        }
-        else
-        {
-            error_die("recv");
-        }
-    }
-}
 
 struct DNSHeader {
     unsigned short ID;
@@ -196,14 +145,19 @@ string dtoh(long long num) {
     return str;
 }
 
-string print(string message) {
-    if (message == "1" ) {
-        return "00 01 ";
+string print(string message)
+{
+
+    if (message.length() == 1)
+    {
+        message = "000" + message;
     }
-    if (message == "0") return "00 00 ";
-    if (message.length() < 4) {
-        for (int i = 0; i < 4 - message.length(); i++) {
-            message = '0' + message;
+
+    if ((message.length() < 4))
+    {
+        for (int i = 0; i < 4 - message.length(); i++)
+        {
+            message = "0" + message;
         }
     }
     return  message.substr(0, 2) + " " + message.substr(2, 2) + " ";
@@ -213,22 +167,55 @@ string dns_encode(string domain, DNSHeader* header, DNSQuestion* query) {
     domain.push_back('.');
     DNS_header(header);
     DNS_query(domain, query);
-    string message="";
-    message+=print(dtoh(stoi(to_string(header->ID))));
+
+    cout << endl;
+    string message = "";
+    message += print(dtoh(stoi(to_string(header->ID))));
     message += print(dtoh(stoi(to_string(header->flags))));
     message += print(dtoh(stoi(to_string(header->questions))));
     message += print(dtoh(stoi(to_string(header->answerRRs))));
     message += print(dtoh(stoi(to_string(header->authorityRRs))));
     message += print(dtoh(stoi(to_string(header->additionalRRs))));
 
-//   for (int i = 0; i < query->length; i++) {
-//       message += print(dtoh(stoi(to_string(query->qname[i]))));
-//    }
-//    message += print(dtoh(stoi(to_string(query->qtype))));
-//    message += print(dtoh(stoi(to_string(query->qclass))));
+    for (int i = 0; i < query->length; i++)
+    {
+        string t = (dtoh(stoi(to_string(query->qname[i]))));
+        if (t.length() == 1)
+            t = "0" + t;
+        message += t;
+        message += ' ';
+    }
+    message += "00 ";
+    message += print(dtoh(stoi(to_string(query->qtype))));
+    message += print(dtoh(stoi(to_string(query->qclass))));
       return message;
 }
-
+string htob(string message) {
+    string binary;
+    for (int j = 0; j < message.length(); j++)
+    {
+        switch (message[j])
+        {
+        case ('0'): binary.append("0000"); break;
+        case ('1'): binary.append("0001"); break;
+        case ('2'): binary.append("0010"); break;
+        case ('3'): binary.append("0011"); break;
+        case ('4'): binary.append("0100"); break;
+        case ('5'): binary.append("0101"); break;
+        case ('6'): binary.append("0110"); break;
+        case ('7'): binary.append("0111"); break;
+        case ('8'): binary.append("1000"); break;
+        case ('9'): binary.append("1001"); break;
+        case ('a'): binary.append("1010"); break;
+        case ('b'): binary.append("1011"); break;
+        case ('c'): binary.append("1100"); break;
+        case ('d'): binary.append("1101"); break;
+        case ('e'): binary.append("1110"); break;
+        case ('f'): binary.append("1111"); break;
+        }
+    }
+    return binary;
+}
 
 int main()
 {
@@ -236,19 +223,56 @@ int main()
     string ip="8.8,8.8", domain;
     int conn = 0;
     cout << "服务器ip：" << endl;
+    if (ip == "0") ip = "8.8,8.8";
     cin >> ip;
 
     cout << "端口："<<endl;
+    if (port == 0) port = 53;
     cin >> port;
     DNSHeader header;
     DNSQuestion query;
-    
+    string bimessage="";
   
-    // SOCKET client_sock = startUDP(&port,ip);
+    SOCKET client_sock = startUDP(&port,ip);
 
-     cout << "dig: ";
-     cin >> domain;
-     string message=dns_encode(domain, &header, &query);
-     cout << endl << message;
-     return 0;
+    cout << "dig: ";
+    cin >> domain;
+    string message=dns_encode(domain, &header, &query);
+    bimessage = htob(message);
+    cout << endl << message<<endl;
+
+    struct sockaddr_in server_addr;
+    int len_server = sizeof(server_addr);
+
+    memset(&server_addr, 0, sizeof(server_addr));
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+    const char* addr = ip.c_str();
+    server_addr.sin_addr.s_addr = inet_addr(addr);
+
+    char buffrecv[4096];
+    memset(buffrecv, 0, sizeof(buffrecv));
+    if (connect(client_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
+    {
+        error_die("connect");
+    }
+
+    if (sendto(client_sock, bimessage.c_str(), bimessage.size(), 0, (struct sockaddr*)&server_addr, sizeof(server_addr)))
+    {
+        cout << "客户端输入：" << bimessage << endl;
+    }
+    else
+    {
+        error_die("send");
+    }
+    if (recvfrom(client_sock, buffrecv, sizeof(buffrecv)-1, 0, (struct sockaddr*)&server_addr, &len_server))
+    {
+        cout << "服务端返回：" << buffrecv << endl;
+    }
+    else
+    {
+        error_die("recv");
+    }
+    return 0;
 }
