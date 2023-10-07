@@ -3,7 +3,7 @@
 #include<cstdlib>
 #include<cstdio>
 #include<iomanip>
-
+#include <string>
 using namespace std;
 
 struct flag
@@ -28,9 +28,19 @@ struct DNSHeader
 }header;
 
 
-struct DNSQuestion
+struct DNSRRs
 {
     string qname;
+    unsigned short Type;
+    unsigned short Class;
+    unsigned short TTL;
+    unsigned short RDlength;
+    string Rdate;
+};
+
+struct DNSQuestion
+{
+    string name;
     unsigned short qtype;
     unsigned short qclass;
 }query;
@@ -76,7 +86,19 @@ string htob(string message)
     return binary;
 }
 
-
+string dtoh(long long num)
+{
+    string str;
+    long long Temp = num / 16;
+    int left = num % 16;
+    if (Temp > 0)
+        str += dtoh(Temp);
+    if (left < 10)
+        str += (left + '0');
+    else
+        str += ('a' + left - 10);
+    return str;
+}
 
 void flag_re(string flag)
 {
@@ -92,21 +114,49 @@ void flag_re(string flag)
 
 int main()
 {
-    string message[12];
-    string binary[12];
+    string message;
+    //string binary[12];
     int num = 0;
-    for (int i = 0; i < 12; ++i) cin >> message[i];
-    for (int i = 0; i < 12; ++i)
+    cin >> message;
+   // for (int i = 0; i < 12; ++i) cin >> message[i];
+    //for (int i = 0; i < 12; ++i)
+   // {
+    //    binary[i] = htob(message[i]);
+   //         cout << binary[i] << endl;
+    //}
+    header.ID=btod(message.substr(0,16));
+    flag_re(message.substr(16, 16));
+    header.question= btod(message.substr(32, 16));
+    header.answerRRs =btod(message.substr(48, 16));
+    header.authorityRRs= btod(message.substr(64, 16));
+    header.additionalRRs= btod(message.substr(80, 16));
+
+    string qname;
+    string domain;
+    unsigned short length = 0;
+    int count = 1;
+    do
     {
-        binary[i] = htob(message[i]);
-            cout << binary[i] << endl;
+        length = btod(message.substr(80+8*count, 8));
+        while (length)
+        {
+            count++;
+            length--;
+             domain.push_back((char)btod(message.substr(80 + 8 * count, 8)));
+        }
+        count++;
+        domain.push_back('.');
+        
+    } while (btod(message.substr(80 + 8 * count, 8)));
+    domain.erase(domain.length() - 1);
+    domain=domain.substr(1);
+    query.qtype = btod(message.substr(80 + 8 * count + 8, 16));
+    query.qclass = btod(message.substr(80 + 8 * count + 8 + 16, 16));
+    if (query.qtype != 1)
+    {
+        printf("不支持的格式\n");
+        return 0;
     }
-    header.ID=btod(binary[0] + binary[1]);
-    flag_re(binary[2] + binary[3]);
-    header.question= btod(binary[4] + binary[5]);
-    header.answerRRs =btod(binary[6] + binary[7]);
-    header.authorityRRs= btod(binary[8] + binary[9]);
-    header.additionalRRs= btod(binary[10] + binary[11]);
     printf("-- Header --\n");
     printf("id:                         %u\n", header.ID);
 
@@ -126,28 +176,77 @@ int main()
     printf("additionalRRs:              %u\n", header.additionalRRs);
     printf("---\n\n");
     cout << "QUESTION SECTION" << endl;
-    string qname;
-    string domain;
-    unsigned short length = 0;
-    do
-    {
-        cin >> qname;
-        length = btod(htob(qname));
-        while (length)
-        {
-            cin >> qname;
-             domain.push_back((char)btod(htob(qname)));
-             length--;
-        }
-        domain.push_back('.');
-        
-    } while (btod(htob(qname)));
-    domain.erase(domain.length() - 1);
-    domain.erase(domain.length() - 1);
     cout << "domain:                     " <<domain << endl;
-    string qtype[2], qclass[2];
-    cin >> qtype[0] >> qtype[1] >> qclass[0] >> qclass[1];
-    printf("type:                       %u\n", btod(htob(qtype[0]+qtype[1])));
-    printf("class:                      %u\n", btod(htob(qclass[0] + qclass[1])));
+    printf("type:                       %u\n", query.qtype);
+    printf("class:                      %u\n", query.qclass);
+    DNSRRs answer, authority，additional;
+
+        int count1 = 120 + 8 * count;
+        for (int i = 0; i < header.answerRRs; i++)
+        {
+            answer.qname = btod(message.substr(count1, 16));
+            count1 += 16;
+            answer.Type = btod(message.substr(count1, 16));
+            count1 += 16;
+            answer.Class = btod(message.substr(count1, 16));
+            count1 += 16;
+            answer.TTL = btod(message.substr(count1, 32));
+            count1 += 32;
+            answer.RDlength = btod(message.substr(count1, 16));
+            answer.Rdate= "";
+            count1 += 16;
+            if (answer.RDlength == 4)
+            {   
+               
+                printf("-- Answer --\n");
+
+                printf("Type:                       %u\n", answer.Type);
+                printf("Class:                      %u\n", answer.Class);
+                printf("TTL:                        %u\n", answer.TTL);
+                printf("RDlength:                   %u\n", answer.RDlength);
+                cout << "Rdate:                      " << btod(message.substr(count1, 8)) << '.'<< btod(message.substr(count1 + 8, 8)) << '.'<< btod(message.substr(count1 + 16, 8)) << '.' << btod(message.substr(count1 + 24, 8))  << endl;
+                printf("---\n\n");
+                count1 += 32;
+                continue;
+            }
+            count = 0;
+            
+
+            int rd = answer.RDlength;
+            cout << rd << endl;
+            do
+            {
+                length = btod(message.substr(count1 + count * 8, 8));
+                if (length == 192)
+                {
+                    answer.Rdate += "com";
+                    count += 16;
+                    cout << answer.Rdate << endl;
+                    break;
+                }
+                while (length)
+                {
+                    count++;
+                    length--;
+                    answer.Rdate.push_back((char)btod(message.substr(count1 + 8 * count, 8)));
+                    rd--;
+                }
+                count++;
+                answer.Rdate.push_back('.');
+                rd--;
+            } while (rd);
+            count1 += 8 * answer.RDlength;
+            printf("-- Answer --\n");
+            cout << "domain:                     " << "" << endl;
+
+            printf("Type:                       %u\n",answer.Type);
+            printf("Class:                      %u\n", answer.Class);
+            printf("TTL:                        %u\n", answer.TTL);
+            printf("RDlength:                   %u\n", answer.RDlength);
+            cout << "Rdate:                      " << answer.Rdate<<endl;
+            printf("---\n\n");
+
+
+        }
     return 0;
 }

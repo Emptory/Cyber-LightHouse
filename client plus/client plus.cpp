@@ -6,6 +6,7 @@
 #pragma comment(lib,"WS2_32.lib")
 #include <ctime>
 #include <cstdlib>
+#include<bitset>
 #include <string>
 #include <cstring>
 #include <sstream>
@@ -132,7 +133,8 @@ void DNS_query(string domain, DNSQuestion* query) {
     query->qclass = htons(0x0100);
 }
 
-string dtoh(long long num) {
+string dtoh(long long num)
+{
     string str;
     long long Temp = num / 16;
     int left = num % 16;
@@ -217,6 +219,17 @@ string htob(string message) {
     return binary;
 }
 
+string message_cope(string message)
+{ 
+    string ret = "";
+    for (int i = 0; i < message.length(); i += 8)
+    {
+        bitset<8> bitset(message.substr(i, 8));
+        ret.push_back(bitset.to_ulong());
+    }
+    return ret;
+}
+
 int main()
 {
     unsigned short port = 53;
@@ -239,7 +252,12 @@ int main()
     cin >> domain;
     string message=dns_encode(domain, &header, &query);
     bimessage = htob(message);
-    cout << endl << message<<endl;
+//    cout << endl << message<<endl;
+//    cout << bimessage << endl;
+    bimessage = message_cope(bimessage);
+//    cout << bimessage << endl;
+ //   cout << bimessage.length()<< endl;
+
 
     struct sockaddr_in server_addr;
     int len_server = sizeof(server_addr);
@@ -266,13 +284,24 @@ int main()
     {
         error_die("send");
     }
-    if (recvfrom(client_sock, buffrecv, sizeof(buffrecv)-1, 0, (struct sockaddr*)&server_addr, &len_server))
+    string answer = "";
+    string bianswer = "";
+    if (recvfrom(client_sock, buffrecv, sizeof(buffrecv), 0, (struct sockaddr*)&server_addr, &len_server))
     {
-        cout << "·þÎñ¶Ë·µ»Ø£º" << buffrecv << endl;
+        for (int i = 0; i <90; i++)
+        {
+            answer.push_back(buffrecv[i]);
+        }
     }
     else
     {
         error_die("recv");
     }
+    for (int i = 0; i < answer.length(); i++)
+    {
+
+        bianswer+= bitset<8>(answer[i]).to_string();
+    }
+    cout << bianswer;
     return 0;
 }
