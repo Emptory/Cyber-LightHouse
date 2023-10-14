@@ -1,9 +1,9 @@
 ﻿  client plus.cpp
 D:\Git\repository\Cyber-LightHouse\client plus\client plus.cpp(104,34): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-D:\Git\repository\Cyber-LightHouse\client plus\client plus.cpp(227,38): warning C4244: “参数”: 从“unsigned long”转换到“const _Elem”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\client plus\client plus.cpp(228,38): warning C4244: “参数”: 从“unsigned long”转换到“const _Elem”，可能丢失数据
           with
           [
               _Elem=char
           ]
-D:\Git\repository\Cyber-LightHouse\client plus\client plus.cpp(280,62): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:\Git\repository\Cyber-LightHouse\client plus\client plus.cpp(279,62): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
   Project8.vcxproj -> D:\Git\repository\Cyber-LightHouse\client plus\x64\Debug\client plus.exe

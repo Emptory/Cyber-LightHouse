@@ -369,25 +369,26 @@ int main()
 	cout << "¼àÌý¶Ë¿Ú£º";
 	cin >> port;
 	cout << "ÕýÔÚ¼àÌý£º" << port << endl;
-	SOCKET server_sock = startUDP(&port);
+	//SOCKET server_sock = startUDP(&port);
+	SOCKET server_sock = startTCP(&port);
 	struct sockaddr_in client_addr;
 	int client_addr_len = sizeof(client_addr);
 
 	while (1)
 	{
-		//SOCKET client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_len);
-		//if (client_sock == -1)
-		//{
-		//	error_die("accept");
-		//}
-		//else
-		//{
-		//	cout << "accepted" << endl;
-		//}
+		SOCKET client_sock = accept(server_sock, (struct sockaddr*)&client_addr, &client_addr_len);
+		if (client_sock == -1)
+		{
+			error_die("accept");
+		}
+		else
+		{
+			cout << "accepted" << endl;
+		}
 		
 		DWORD threadID = 0;
-		//CreateThread(0, 0, accept_TCP, (void*)client_sock, 0, &threadID);
-		CreateThread(0, 0, accept_UDP, (void*)server_sock, 0, &threadID);
+		CreateThread(0, 0, accept_TCP, (void*)client_sock, 0, &threadID);
+		//CreateThread(0, 0, accept_UDP, (void*)server_sock, 0, &threadID);
 	}
 
 
